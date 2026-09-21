@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema Escolar - 2026</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #eaf1fb;
+      color: #14274e;
+    }
+
+    /* Janela do sistema */
+    .janela {
+      width: 100%;
+      max-width: 520px;
+      background: #ffffff;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 6px 24px rgba(20, 60, 120, 0.18);
+    }
+
+    .barra {
+      background: #2a64a8;
+      padding: 12px 16px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .bolinha {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .vermelho { background: #ff5f57; }
+    .amarelo  { background: #febc2e; }
+    .verde    { background: #28c840; }
+
+    .conteudo {
+      padding: 24px 20px 28px;
+    }
+
+    h1 {
+      margin: 0 0 20px;
+      text-align: center;
+      font-size: 26px;
+    }
+
+    /* Formulário */
+    .formulario {
+      border: 1px solid #d5e1f3;
+      border-radius: 10px;
+      padding: 18px;
+    }
+
+    .campo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .campo label {
+      flex: 1;
+      font-size: 16px;
+    }
+
+    .campo input {
+      flex: 1;
+      width: 100%;
+      min-width: 0;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #b8cbe8;
+      border-radius: 6px;
+      outline: none;
+    }
+
+    .campo input:focus {
+      border-color: #1f6fd0;
+      box-shadow: 0 0 0 3px rgba(31, 111, 208, 0.2);
+    }
+
+    button {
+      width: 100%;
+      margin-top: 4px;
+      padding: 13px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #ffffff;
+      background: #1f6fd0;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1858a8;
+    }
+
+    /* Resultado */
+    .resultado {
+      margin-top: 18px;
+      padding: 16px;
+      text-align: center;
+      background: #f1f6fd;
+      border: 1px solid #d5e1f3;
+      border-radius: 10px;
+    }
+
+    .resultado p {
+      margin: 6px 0;
+      font-size: 17px;
+    }
+
+    #media {
+      font-size: 26px;
+      font-weight: bold;
+    }
+
+    #situacao {
+      font-weight: bold;
+    }
+
+    #situacao.aprovado    { color: #1a8f3c; }
+    #situacao.recuperacao { color: #d0342c; }
+
+    #erro {
+      margin: 0 0 12px;
+      color: #d0342c;
+      font-size: 14px;
+      min-height: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="janela">
+    <div class="barra">
+      <span class="bolinha vermelho"></span>
+      <span class="bolinha amarelo"></span>
+      <span class="bolinha verde"></span>
+    </div>
+
+    <div class="conteudo">
+      <h1>Sistema Escolar - 2026</h1>
+
+      <div class="formulario">
+        <div class="campo">
+          <label for="nota1">Digite a nota da 1ª Unidade</label>
+          <input type="number" id="nota1" min="0" max="10" step="0.1">
+        </div>
+
+        <div class="campo">
+          <label for="nota2">Digite a nota da 2ª Unidade</label>
+          <input type="number" id="nota2" min="0" max="10" step="0.1">
+        </div>
+
+        <div class="campo">
+          <label for="nota3">Digite a nota da 3ª Unidade</label>
+          <input type="number" id="nota3" min="0" max="10" step="0.1">
+        </div>
+
+        <p id="erro"></p>
+
+        <button onclick="calcularMedia()">CALCULAR MÉDIA</button>
+      </div>
+
+      <div class="resultado">
+        <p>Média: <span id="media">0,0</span></p>
+        <p>Situação: <span id="situacao">-</span></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function calcularMedia() {
+      // 1. Pegar os valores digitados
+      var texto1 = document.getElementById("nota1").value;
+      var texto2 = document.getElementById("nota2").value;
+      var texto3 = document.getElementById("nota3").value;
+
+      var erro = document.getElementById("erro");
+      var mediaTela = document.getElementById("media");
+      var situacaoTela = document.getElementById("situacao");
+
+      // 2. Verificar se todos os campos foram preenchidos
+      if (texto1 === "" || texto2 === "" || texto3 === "") {
+        erro.textContent = "Preencha as 3 notas para calcular.";
+        mediaTela.textContent = "0,0";
+        situacaoTela.textContent = "-";
+        situacaoTela.className = "";
+        return;
+      }
+
+      var nota1 = parseFloat(texto1);
+      var nota2 = parseFloat(texto2);
+      var nota3 = parseFloat(texto3);
+
+      // 3. Verificar se as notas estão entre 0 e 10
+      if (nota1 < 0 || nota1 > 10 || nota2 < 0 || nota2 > 10 || nota3 < 0 || nota3 > 10) {
+        erro.textContent = "As notas devem estar entre 0 e 10.";
+        mediaTela.textContent = "0,0";
+        situacaoTela.textContent = "-";
+        situacaoTela.className = "";
+        return;
+      }
+
+      erro.textContent = "";
+
+      // 4. Calcular a média
+      var media = (nota1 + nota2 + nota3) / 3;
+
+      // 5. Definir a situação do aluno
+      if (media >= 5) {
+        situacaoTela.textContent = "APROVADO";
+        situacaoTela.className = "aprovado";
+      } else {
+        situacaoTela.textContent = "RECUPERAÇÃO";
+        situacaoTela.className = "recuperacao";
+      }
+
+      // 6. Mostrar a média na tela (com vírgula, como no modelo)
+      mediaTela.textContent = media.toFixed(1).replace(".", ",");
+    }
+  </script>
+
+</body>
+</html>
